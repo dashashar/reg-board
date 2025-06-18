@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: SemesterWork_3
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${POSTGRES_HOST:db}:${POSTGRES_PORT:5432}/${POSTGRES_DB}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yml
+
+  mvc:
+    static-path-pattern: /static/**
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    ru.itis: DEBUG
+  file:
+    name: logs/app.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+jwt:
+  secret-key: ${JWT_SECRET}
+  expiration: 3_600_000
+
+minio:
+  url: http://${MINIO_HOST:minio}:${MINIO_PORT:9000}
+  bucket: ${MINIO_BUCKET}
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
+
+api:
+  qr:
+    url: https://api.qrserver.com/v1/create-qr-code/
+    size: 200x200
+
+server-address: http://localhost:8080

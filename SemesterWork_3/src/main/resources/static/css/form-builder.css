@@ -1,0 +1,25 @@
+.form-field {
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.field-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.remove-field {
+    margin-left: 10px;
+}
+
+.options-container {
+    display: none;
+}
+
+.field-type[value="SINGLE_CHOICE"] ~ .options-container,
+.field-type[value="MULTIPLE_CHOICE"] ~ .options-container {
+    display: block;
+}

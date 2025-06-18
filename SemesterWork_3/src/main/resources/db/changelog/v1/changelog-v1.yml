@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: DDL/20250515-init-db.sql
+      relativeToChangelogFile: true
+  - include:
+      file: DML/20250516-add-event-categories.sql
+      relativeToChangelogFile: true
+  - include:
+      file: DDL/20252521-create-index-mtm.sql
+      relativeToChangelogFile: true
