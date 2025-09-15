@@ -129,10 +129,7 @@ $(document).ready(function() {
     async function deleteImage(imageId) {
         return $.ajax({
             url: `/api/image/${imageId}`,
-            method: 'DELETE',
-            headers: {
-                'X-XSRF-TOKEN': getCsrfToken()
-            }
+            method: 'DELETE'
         });
     }
 
@@ -145,10 +142,7 @@ $(document).ready(function() {
             method: 'POST',
             data: uploadFormData,
             processData: false,
-            contentType: false,
-            headers: {
-                'X-XSRF-TOKEN': getCsrfToken()
-            }
+            contentType: false
         }).then(response => response.imgId);
     }
 

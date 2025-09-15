@@ -14,7 +14,6 @@
         <div class="col-md-5 col-lg-4">
             <h1 class="mb-4 text-center">Вход</h1>
             <form action="/account/signIn" method="post" class="p-4 border rounded-3 bg-white shadow-sm">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <input type="email" id="email" name="email" class="form-control <#if errors?? && errors["email"]??>is-invalid</#if>" required>

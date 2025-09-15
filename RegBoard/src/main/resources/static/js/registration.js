@@ -72,10 +72,6 @@ function addFieldData(formDataArray, fieldName, value) {
 async function submitRegistration(eventId, formData, csrfToken) {
     const response = await fetch(`/registration/event/${eventId}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-XSRF-TOKEN': csrfToken
-        },
         body: JSON.stringify(formData)
     });
 

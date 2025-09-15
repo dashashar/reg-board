@@ -73,7 +73,6 @@
                     <div class="card-body">
                         <h5 class="card-title">Форма регистрации</h5>
                         <form id="registrationForm" action="/registration/event/${eventId}" method="post">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" id="eventId" name="eventId" value="${eventId}">
                             <#list details.fields as field>
                                 <div class="mb-3">

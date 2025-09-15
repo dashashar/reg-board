@@ -151,10 +151,6 @@ function submitFormData(url, formFields) {
     const csrfToken = getCookie('XSRF-TOKEN');
     return fetch(url, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-XSRF-TOKEN': csrfToken
-        },
         body: JSON.stringify(formFields)
     })
         .then(response => {

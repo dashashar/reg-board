@@ -26,7 +26,6 @@
 
     <div id="orgInfo" class="card mb-4 p-3">
         <form id="editOrgForm">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div class="mb-3">
                 <label class="form-label">Название:</label>
                 <input type="text" name="name" id="orgName" class="form-control" required maxlength="255">
@@ -50,7 +49,6 @@
 
         <h3 class="mb-3">Добавить администратора</h3>
         <form id="addAdminForm" class="mb-3">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div class="input-group">
                 <input type="email" name="email" class="form-control" placeholder="Email" required>
                 <button type="submit" class="btn btn-success">Добавить</button>

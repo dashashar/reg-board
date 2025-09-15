@@ -14,7 +14,6 @@
         <div class="col-md-6 col-lg-5">
             <h1 class="mb-4 text-center">Регистрация</h1>
             <form action="/account/signUp" method="post" class="p-4 border rounded-3 bg-white shadow-sm">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="mb-3">
                     <label for="firstName" class="form-label">Имя:</label>
                     <input type="text" id="firstName" name="firstName" value="${(account.firstName())!''}" class="form-control <#if errors?? && errors["firstName"]??>is-invalid</#if>" required>

@@ -40,7 +40,6 @@
     <div id="createOrgForm" style="display: none;" class="card mb-4 p-3">
         <h3 class="mb-3">Создать организацию</h3>
         <form id="orgForm">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div class="mb-3">
                 <label class="form-label">Название:</label>
                 <input type="text" name="name" class="form-control" required maxlength="255">

@@ -96,9 +96,6 @@ function createOrganization() {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(formData),
-        headers: {
-            'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
-        },
         success: function() {
             $('#createOrgForm').hide();
             $('#createOrgBtn').show();
@@ -131,9 +128,6 @@ function deleteOrganization(orgId) {
     $.ajax({
         url: `/api/org/${orgId}`,
         type: 'DELETE',
-        headers: {
-            'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
-        },
         success: function() {
             $(`button[onclick="deleteOrganization(${orgId})"]`)
                 .closest('.org-card')
@@ -216,9 +210,6 @@ function updateOrganization() {
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(formData),
-        headers: {
-            'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
-        },
         success: function() {
             showSuccess('Изменения успешно сохранены');
         },
@@ -245,9 +236,6 @@ function addAdmin() {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ email: email }),
-        headers: {
-            'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
-        },
         success: function() {
             loadOrganization();
             $('#addAdminForm')[0].reset();
@@ -267,9 +255,6 @@ function deleteAdmin(accountId) {
     $.ajax({
         url: `/api/org/${orgId}/account/${accountId}`,
         type: 'DELETE',
-        headers: {
-            'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
-        },
         success: function() {
             loadOrganization();
             showSuccess('Администратор успешно удален');

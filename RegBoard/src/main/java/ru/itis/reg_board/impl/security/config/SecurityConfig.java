@@ -6,12 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import ru.itis.reg_board.impl.security.filter.OrgAccessFilter;
 import ru.itis.reg_board.impl.security.jwt.filter.JwtAuthenticationFilter;
 
@@ -23,27 +23,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter,
                                                    OrgAccessFilter orgAccessFilter) throws Exception {
-        http.csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                )
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/main", "/account/signUp", "/account/signIn", "/static/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(orgAccessFilter, JwtAuthenticationFilter.class)
                 .logout(logout -> logout
-                        .logoutUrl("/account/logout")
+                        .logoutUrl("/auth/logout")
                         .logoutSuccessUrl("/account/signIn")
                         .clearAuthentication(true)
-                        .invalidateHttpSession(true)
                         .addLogoutHandler((request, response, authentication) -> {
                             response.addCookie(invalidateJwtCookie());
                         })
                         .permitAll())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) ->
-                                response.sendRedirect("%s/account/signIn".formatted(request.getContextPath()))));
+                                response.sendRedirect("%s/account/signIn?error=%s"
+                                        .formatted(request.getContextPath(), authException.getMessage()))));
         return http.build();
     }
 

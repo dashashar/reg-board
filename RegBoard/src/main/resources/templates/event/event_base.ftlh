@@ -3,7 +3,6 @@
         <div class="col-md-8 col-lg-7">
             <h1 class="mb-4 text-center">${title_text}</h1>
             <form action="${action_url}" method="post" id="form" class="p-4 border rounded-3 bg-white shadow-sm" enctype="multipart/form-data">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="mb-3">
                     <label for="title" class="form-label">Название мероприятия</label>
                     <input type="text" id="title" name="title" value="${(event.title())!''}" class="form-control <#if errors?? && errors["title"]??>is-invalid</#if>" required>
