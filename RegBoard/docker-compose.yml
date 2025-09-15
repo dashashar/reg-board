@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - app-network
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    env_file:
+      - .env
+    command: server /data
+    networks:
+      - app-network
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  app:
+    build: .
+    container_name: app
+    restart: always
+    depends_on:
+      - db
+      - minio
+    env_file:
+      - .env
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  pgdata:
+  minio_data:
+
+networks:
+  app-network:
+    driver: bridge
