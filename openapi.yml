@@ -1,0 +1,845 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: API картинок
+  description: "API для загрузки, получения и удаления картинок"
+- name: API организаций
+  description: "API для добавления, получения, обновления, удаления организаций и\
+    \ добавления, удаления администраторов"
+paths:
+  /api/org/{orgId}:
+    get:
+      tags:
+      - API организаций
+      summary: Получение организации
+      description: Извлекает данные организации по id
+      operationId: getOrganization
+      parameters:
+      - name: orgId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "404":
+          description: Организация не найдена
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Организация не найдена
+                path: /api/org/1000000
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось получить организацию
+                path: /api/org/1000000
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Успешное выполнение
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationAdminResponse'
+    put:
+      tags:
+      - API организаций
+      summary: Обновление организации
+      description: Отправляет данные для обновление информации по организации
+      operationId: updateOrganization
+      parameters:
+      - name: orgId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRequest'
+        required: true
+      responses:
+        "404":
+          description: Организация не найдена
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Организация не найдена
+                path: /api/org/1000000
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось отредактировать данные организации
+                path: /api/org/1000000
+        "400":
+          description: Неккоректные введеные данные
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Успешное выполнение
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+    post:
+      tags:
+      - API организаций
+      summary: Добавление администратора
+      description: Отправляет данные на добавление администратора
+      operationId: addAdmin
+      parameters:
+      - name: orgId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAdminRequest'
+        required: true
+      responses:
+        "404":
+          description: Не найден аккаунт или организация
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Аккаунт не найден
+                path: /api/org/10000000
+        "409":
+          description: Конфликт с существующими данными
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Аккаунт уже добавлен как админ организации
+                path: /api/org/10000000
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось добавить админа
+                path: /api/org/10000000
+        "400":
+          description: Неккоректные введеные данные
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T19:09:03.0366087
+                status: 400
+                error: Ошибка валидации
+                path: /api/org/10000000
+                details:
+                  email: Некорректный email
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "201":
+          description: Успешное создание
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+    delete:
+      tags:
+      - API организаций
+      summary: Удаление организации
+      description: Отправляет запрос на удаление организации по id
+      operationId: deleteOrganization
+      parameters:
+      - name: orgId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "404":
+          description: Организация не найдена
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Организация не найдена
+                path: /api/org/1000000
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось удалить организацию
+                path: /api/org/1000000
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "204":
+          description: Успешное удаление
+  /api/org/account:
+    get:
+      tags:
+      - API организаций
+      summary: Получение всех организаций
+      description: Извлекает краткое описание всех организаций аккаунта
+      operationId: getAllBriefOrganizations
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось получить данные организаций
+                path: /api/org/account
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Успешное выполнение
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationBriefResponse'
+    post:
+      tags:
+      - API организаций
+      summary: Создание организации
+      description: Отправляет данные на создание организации
+      operationId: createOrganization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRequest'
+        required: true
+      responses:
+        "404":
+          description: Аккаунт не найден
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Аккаунт не найден
+                path: /api/org/account
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось создать организацию
+                path: /api/org/account
+        "400":
+          description: Неккоректные введеные данные
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "201":
+          description: Успешное создание
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationAdminResponse'
+  /api/image/upload:
+    post:
+      tags:
+      - API картинок
+      summary: Загрузка картинки
+      description: Загружает картинку
+      operationId: uploadImage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось загрузить файл
+                path: /api/image/upload
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "201":
+          description: Успешная загрузка
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+  /registration/{regId}:
+    get:
+      tags:
+      - registration-controller
+      operationId: confirmRegistration
+      parameters:
+      - name: regId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                type: string
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfirmationRegistrationResponse'
+  /api/image/{fileId}:
+    get:
+      tags:
+      - API картинок
+      summary: Получение картинки
+      description: Извлекает картинку
+      operationId: getImage
+      parameters:
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось получить файл
+                path: /api/image/356dce9b-fd4a-4d17-b912-f3e14f8cdff5
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Успешное выполнение
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+    delete:
+      tags:
+      - API картинок
+      summary: Удаление картинки
+      description: Отправляет запрос на удаление картинки по id
+      operationId: deleteImage
+      parameters:
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось удалить файл
+                path: /api/image/356dce9b-fd4a-4d17-b912-f3e14f8cdff5
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "204":
+          description: Успешное удаление
+  /api/org/{orgId}/account/{accountId}:
+    delete:
+      tags:
+      - API организаций
+      summary: Удаление администратора
+      description: Отправляет запрос на удаление администратора по id
+      operationId: deleteAdmin
+      parameters:
+      - name: orgId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "404":
+          description: Не найден аккаунт или организация
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-06-13T16:36:47.812759
+                status: 404
+                error: Организация не найдена
+                path: /api/org/1000000/account/1000000
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+        "500":
+          description: Ошибка базы данных
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppErrorResponse'
+              example:
+                timestamp: 2025-05-28T14:01:26.2366544
+                status: 500
+                error: Не удалось удалить администратора
+                path: /api/org/1000000/account/1000000
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                type: string
+        "204":
+          description: Успешное удаление
+components:
+  schemas:
+    AppErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: "Дата и время, когда произошла ошибка"
+          format: date-time
+        status:
+          type: integer
+          description: Статусный код HTTP
+          format: int32
+          example: 400
+        error:
+          type: string
+          description: Описание ошибки
+          example: Ошибка валидации
+        path:
+          type: string
+          description: "Путь API, где произошла ошибка"
+          example: /api/org/account
+        details:
+          type: object
+          additionalProperties:
+            type: string
+            description: Дополнительные сведения при ошибках валидации
+            nullable: true
+            example: "{\"name\":\"Название не может быть пустым\",\"description\"\
+              :\"Описание не может быть пустым\",\"email\":\"Некорректный email\"}"
+          description: Дополнительные сведения при ошибках валидации
+          nullable: true
+          example:
+            name: Название не может быть пустым
+            description: Описание не может быть пустым
+            email: Некорректный email
+      description: Стандартный ответ ошибки
+    OrganizationResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id организации
+          format: int64
+          example: 10000000
+        name:
+          type: string
+          description: Название организации
+          example: Эпишура
+        description:
+          type: string
+          description: Описание организации
+          example: Волонтерская организация
+        email:
+          type: string
+          description: Почтовый адрес организации
+          example: epishura@gmail.com
+      description: Ответ с данными огранизации
+    OrganizationRequest:
+      required:
+      - description
+      - email
+      - name
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Название организации
+          example: Эпишура
+        description:
+          maxLength: 500
+          minLength: 0
+          type: string
+          description: Описание организации
+          example: Волонтерская организация
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Почтовый адрес организации
+          example: epishura@gmail.com
+      description: Запрос на создание организации
+    AccountResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id аккаунта
+          format: int64
+          example: 10000005
+        firstName:
+          type: string
+          description: Имя
+          example: Мария
+        lastName:
+          type: string
+          description: Фамилия
+          example: Попова
+        email:
+          type: string
+          description: Почтовый адрес
+          example: masha@mail.ru
+      description: Ответ с данными аккаунта
+      example:
+      - id: 10000000
+        firstName: dasha
+        lastName: sha
+        email: dasha@mail.ru
+    AddAdminRequest:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: "Email аккаунта, которого надо сделать администратором"
+          example: masha@mail.ru
+      description: Запрос на добавление администратора
+    OrganizationAdminResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id организации
+          format: int64
+          example: 10000000
+        name:
+          type: string
+          description: Название организации
+          example: Эпишура
+        description:
+          type: string
+          description: Описание организации
+          example: Волонтерская организация
+        email:
+          type: string
+          description: Почтовый адрес организации
+          example: epishura@gmail.com
+        admins:
+          type: array
+          description: Администраторы организации
+          example:
+          - id: 10000000
+            firstName: dasha
+            lastName: sha
+            email: dasha@mail.ru
+          items:
+            $ref: '#/components/schemas/AccountResponse'
+      description: Информация по организации со списком администраторов
+    ConfirmationRegistrationResponse:
+      type: object
+      properties:
+        httpStatusCode:
+          type: integer
+          format: int32
+        registrationStatus:
+          type: string
+        message:
+          type: string
+        registrationId:
+          type: string
+          format: uuid
+    OrganizationBriefResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id организации
+          format: int64
+          example: 10000000
+        name:
+          type: string
+          description: Название организации
+          example: Эпишура
+      description: Краткая информация по организации
